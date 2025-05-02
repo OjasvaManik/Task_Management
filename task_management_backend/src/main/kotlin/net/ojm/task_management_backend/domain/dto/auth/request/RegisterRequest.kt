@@ -6,6 +6,7 @@ data class RegisterRequest(
     val userPassword: String,
     val email: String,
     val name: String,
-    val organisationName: String
+    val organisationName: String,
+    val organisationSecretCode: String,
 
 )

@@ -49,6 +49,7 @@ class AuthServiceImplementation (
         }
 
         val encodedPassword = passwordEncoder.encode(user.userPassword)
+        organisation = organisation.copy(organisationSecretCode = passwordEncoder.encode(organisation.organisationSecretCode))
         organisation = organisationRepo.save(organisation)
         val newUser = user.copy(userPassword = encodedPassword, organisation = organisation)
         userRepo.save(newUser)
@@ -61,11 +62,17 @@ class AuthServiceImplementation (
 
         val user = request.toUserEntity(organisation)
 
+        if (!passwordEncoder.matches(request.organisationSecretCode, organisation.organisationSecretCode)) {
+            return ResponseEntity.badRequest().body("Invalid organisation secret code")
+        }
         if (userRepo.existsByEmail(user.email)) {
             return ResponseEntity.badRequest().body("Email already in use")
         }
         if (userRepo.existsByUserName(user.userName)) {
             return ResponseEntity.badRequest().body("UserName already in use")
+        }
+        if (userRepo.existsByOrganisationAndUserName(organisation, user.userName)) {
+            return ResponseEntity.badRequest().body("UserName already in use in this organisation")
         }
         val encodedPassword = passwordEncoder.encode(user.userPassword)
         val newUser = user.copy(userPassword = encodedPassword)

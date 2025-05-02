@@ -26,6 +26,7 @@ fun OrganisationRegisterRequest.toOrganisationEntity(): OrganisationEntity {
     return OrganisationEntity(
         organisationName = this.organisationName,
         organisationEmail = this.organisationEmail,
+        organisationSecretCode = this.organisationSecretCode,
     )
 }
 

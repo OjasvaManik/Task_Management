@@ -21,6 +21,8 @@ interface UserRepo: JpaRepository<UserEntity, UUID> {
 
     fun findAllByOrganisation(organisation: OrganisationEntity): List<UserEntity>;
 
+    fun existsByOrganisationAndUserName(organisation: OrganisationEntity, userName: String): Boolean;
+
     fun findByEmail(email: String): UserEntity?;
 
     fun findByUserNameContainingIgnoreCase(userName: String): UserEntity?;

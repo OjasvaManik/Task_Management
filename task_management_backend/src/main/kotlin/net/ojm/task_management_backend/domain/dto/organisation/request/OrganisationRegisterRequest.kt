@@ -4,6 +4,7 @@ data class OrganisationRegisterRequest(
 
     val organisationName: String,
     val organisationEmail: String,
+    val organisationSecretCode: String,
     val userName: String,
     val userPassword: String
 

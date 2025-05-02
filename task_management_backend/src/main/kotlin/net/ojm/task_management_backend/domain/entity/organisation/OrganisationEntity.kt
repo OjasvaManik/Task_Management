@@ -21,4 +21,7 @@ data class OrganisationEntity(
     @Column(nullable = false, name = "organisation_email")
     val organisationEmail: String,
 
+    @Column(nullable = false, name = "organisation_secret_code")
+    val organisationSecretCode: String,
+
 ): BaseTimeEntity()

@@ -1,0 +1,1 @@
+ALTER TABLE organisations ADD COLUMN IF NOT EXISTS organisation_secret_code varchar(255);
