@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import {UserPlus} from "lucide-react";
+import { useState } from "react";
 
 const schema = z.object({
 	organisationName: z.string().min(1, {
@@ -39,6 +40,10 @@ const schema = z.object({
 type FormFields = z.infer<typeof schema>;
 
 export default function RegisterOrganisation() {
+	const [isLoading, setIsLoading] = useState(false);
+	const [apiError, setApiError] = useState<string | null>(null);
+	const [apiSuccess, setApiSuccess] = useState<string | null>(null);
+
 	const form = useForm<FormFields>({
 		resolver: zodResolver(schema),
 		defaultValues: {
@@ -49,14 +54,73 @@ export default function RegisterOrganisation() {
 			organisationSecretCode: "",
 		},
 	});
-	const onSubmit: SubmitHandler<FormFields> = (data) => {
-		console.log(data);
+
+	const onSubmit: SubmitHandler<FormFields> = async (data) => {
+		try {
+			setIsLoading(true);
+			setApiError(null);
+			setApiSuccess(null);
+
+			console.log("Submitting form data:", data);
+
+			// Using full URL since React (5173) and Spring Boot (8080) are on different ports
+			const apiUrl = "http://localhost:8080/api/v1/auth/register-organisation";
+
+			console.log("Sending request to:", apiUrl);
+
+			const response = await fetch(apiUrl, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(data),
+				// Important for CORS when credentials (cookies) need to be sent
+				credentials: "include",
+			});
+
+			console.log("Response status:", response.status);
+
+			const responseText = await response.text();
+			console.log("Response text:", responseText);
+
+			if (!response.ok) {
+				throw new Error(responseText || `Error ${response.status}: Failed to register organisation`);
+			}
+
+			setApiSuccess(responseText || "Organisation registered successfully!");
+			console.log("Registration successful");
+
+			// Reset the form after successful submission
+			form.reset();
+		} catch (error) {
+			console.error("Registration error:", error);
+			if (error instanceof TypeError && error.message.includes('fetch')) {
+				// Network error - likely CORS issue
+				setApiError("Network error: CORS issue detected. Please check server configuration.");
+			} else {
+				setApiError(error instanceof Error ? error.message : "An unknown error occurred");
+			}
+		} finally {
+			setIsLoading(false);
+		}
 	}
 
 	return(
-		<div className={'p-10 flex flex-col items-center'}>
+		<div className="p-10 flex flex-col items-center">
 			<Form {...form}>
-				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 flex-1 lg:flex lg:justify-center lg:items-center lg:flex-col ">
+				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 flex-1 lg:flex lg:justify-center lg:items-center lg:flex-col">
+					{apiError && (
+						<div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+							<span className="block sm:inline">{apiError}</span>
+						</div>
+					)}
+
+					{apiSuccess && (
+						<div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+							<span className="block sm:inline">{apiSuccess}</span>
+						</div>
+					)}
+
 					<FormField
 						control={form.control}
 						name="organisationName"
@@ -85,8 +149,8 @@ export default function RegisterOrganisation() {
 									<div className="flex flex-col w-full group/mob-desc">
 										<FormControl>
 											<Input
-												autoComplete={"off"}
-												disabled={form.formState.isSubmitting}
+												autoComplete="off"
+												disabled={isLoading}
 												placeholder="Organisation"
 												className="input"
 												{...field}
@@ -130,8 +194,8 @@ export default function RegisterOrganisation() {
 									<div className="flex flex-col w-full group/mob-desc">
 										<FormControl>
 											<Input
-												autoComplete={"off"}
-												disabled={form.formState.isSubmitting}
+												autoComplete="off"
+												disabled={isLoading}
 												placeholder="Email"
 												className="input"
 												{...field}
@@ -175,9 +239,9 @@ export default function RegisterOrganisation() {
 									<div className="flex flex-col w-full group/mob-desc">
 										<FormControl>
 											<Input
-												autoComplete={"off"}
+												autoComplete="off"
 												type="password"
-												disabled={form.formState.isSubmitting}
+												disabled={isLoading}
 												placeholder="Organisation Code"
 												className="input"
 												{...field}
@@ -221,8 +285,8 @@ export default function RegisterOrganisation() {
 									<div className="flex flex-col w-full group/mob-desc">
 										<FormControl>
 											<Input
-												autoComplete={"off"}
-												disabled={form.formState.isSubmitting}
+												autoComplete="off"
+												disabled={isLoading}
 												placeholder="Username"
 												className="input"
 												{...field}
@@ -266,9 +330,9 @@ export default function RegisterOrganisation() {
 									<div className="flex flex-col w-full group/mob-desc">
 										<FormControl>
 											<Input
-												autoComplete={"off"}
+												autoComplete="off"
 												type="password"
-												disabled={form.formState.isSubmitting}
+												disabled={isLoading}
 												placeholder="Password"
 												className="input"
 												{...field}
@@ -284,69 +348,10 @@ export default function RegisterOrganisation() {
 							</FormItem>
 						)}
 					/>
-					<Button disabled={form.formState.isSubmitting} className={'button'} type="submit">
-						<UserPlus />
-						{form.formState.isSubmitting ? "Loading..." : "Register"}
+					<Button disabled={isLoading} className="button" type="submit">
+						<UserPlus className="mr-2" />
+						{isLoading ? "Registering..." : "Register"}
 					</Button>
-
-					{/*<FormField*/}
-					{/*    control={form.control}*/}
-					{/*    name="name"*/}
-					{/*    render={({ field }) => (*/}
-					{/*        <FormItem>*/}
-					{/*            <FormLabel className={'label'}>Name:</FormLabel>*/}
-					{/*            <FormControl>*/}
-					{/*                <Input disabled={form.formState.isSubmitting} placeholder="Name" className={'input'} {...field} />*/}
-					{/*            </FormControl>*/}
-					{/*            <FormDescription className={'description'}>*/}
-					{/*                This is your public display name.*/}
-					{/*            </FormDescription>*/}
-					{/*            <FormMessage className={'message'}  />*/}
-					{/*        </FormItem>*/}
-					{/*    )}*/}
-					{/*/>*/}
-					{/*<FormField*/}
-					{/*    control={form.control}*/}
-					{/*    name="email"*/}
-					{/*    render={({ field }) => (*/}
-					{/*        <FormItem>*/}
-					{/*            <FormLabel className={'label'}>Email:</FormLabel>*/}
-					{/*            <FormControl>*/}
-					{/*                <Input disabled={form.formState.isSubmitting} placeholder="Email" className={'input'} {...field} />*/}
-					{/*            </FormControl>*/}
-					{/*            <FormMessage className={'message'}  />*/}
-					{/*        </FormItem>*/}
-					{/*    )}*/}
-					{/*/>*/}
-					{/*<FormField*/}
-					{/*    control={form.control}*/}
-					{/*    name="organisationName"*/}
-					{/*    render={({ field }) => (*/}
-					{/*        <FormItem>*/}
-					{/*            <FormLabel className={'label'}>Organisation Name:</FormLabel>*/}
-					{/*            <FormControl>*/}
-					{/*                <Input disabled={form.formState.isSubmitting} placeholder="Organsiation Name" className={'input'} {...field} />*/}
-					{/*            </FormControl>*/}
-					{/*            <FormDescription className={'description'}>*/}
-					{/*                Enter the Correct name of your Organisation.*/}
-					{/*            </FormDescription>*/}
-					{/*            <FormMessage className={'message'}  />*/}
-					{/*        </FormItem>*/}
-					{/*    )}*/}
-					{/*/>*/}
-					{/*<FormField*/}
-					{/*    control={form.control}*/}
-					{/*    name="userPassword"*/}
-					{/*    render={({ field }) => (*/}
-					{/*        <FormItem>*/}
-					{/*            <FormLabel className={'label'}>Password:</FormLabel>*/}
-					{/*            <FormControl>*/}
-					{/*                <Input disabled={form.formState.isSubmitting} type="password" placeholder="Password" className={'input'} {...field} />*/}
-					{/*            </FormControl>*/}
-					{/*            <FormMessage className={'message'}  />*/}
-					{/*        </FormItem>*/}
-					{/*    )}*/}
-					{/*/>*/}
 				</form>
 			</Form>
 		</div>

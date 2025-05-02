@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import {UserPlus} from "lucide-react";
+import {useState} from "react";
 
 const schema = z.object({
     userName: z.string().min(3, {
@@ -42,6 +43,10 @@ const schema = z.object({
 type FormFields = z.infer<typeof schema>;
 
 export default function RegisterUser() {
+    const [isLoading, setIsLoading] = useState(false);
+    const [isError, setIsError] = useState<string | null>(null);
+    const [isSuccess, setIsSuccess] = useState<string | null>(null);
+
     const form = useForm<FormFields>({
         resolver: zodResolver(schema),
         defaultValues: {
@@ -53,14 +58,62 @@ export default function RegisterUser() {
             organisationSecretCode: "",
         },
     });
-    const onSubmit: SubmitHandler<FormFields> = (data) => {
-        console.log(data);
+    const onSubmit: SubmitHandler<FormFields> = async (data) => {
+        try{
+            setIsLoading(true);
+            setIsError(null);
+            setIsSuccess(null);
+
+            console.log("Submitting form data:", data);
+
+            const apiUrl = "http://localhost:8080/api/v1/auth/register";
+
+            const response = await fetch(apiUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+                credentials: "include",
+            })
+
+            const responseText = await response.text();
+
+            if (!response.ok) {
+                throw new Error(responseText || `Error ${response.status}: Failed to register organisation`);
+            }
+
+            setIsSuccess(responseText || "Organisation registered successfully!");
+            form.reset();
+        }
+        catch (error) {
+            console.error("Registration error:", error);
+            if (error instanceof TypeError && error.message.includes('fetch')) {
+                // Network error - likely CORS issue
+                setIsError("Network error: CORS issue detected. Please check server configuration.");
+            } else {
+                setIsError(error instanceof Error ? error.message : "An unknown error occurred");
+            }
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     return(
         <div className={'p-10 flex flex-col items-center'}>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 flex-1 lg:flex lg:justify-center lg:items-center lg:flex-col ">
+                    {isError && (
+                        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                            <span className="block sm:inline">{isError}</span>
+                        </div>
+                    )}
+
+                    {isSuccess && (
+                        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                            <span className="block sm:inline">{isSuccess}</span>
+                        </div>
+                    )}
                     <FormField
                         control={form.control}
                         name="userName"
@@ -327,9 +380,9 @@ export default function RegisterUser() {
                             </FormItem>
                         )}
                     />
-                    <Button disabled={form.formState.isSubmitting} className={'button'} type="submit">
+                    <Button disabled={isLoading} className={'button'} type="submit">
                         <UserPlus />
-                        {form.formState.isSubmitting ? "Loading..." : "Register"}
+                        {isLoading ? "Registering..." : "Register"}
                     </Button>
 
                     {/*<FormField*/}
