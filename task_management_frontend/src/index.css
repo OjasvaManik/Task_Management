@@ -141,6 +141,14 @@
     @apply border-0 bg-black rounded-2xl h-10;
 
   }
+  .command-box {
+    @apply border-0 rounded-lg shadow-md md:min-w-[450px] bg-black mr-5;
+    box-shadow: 10px 10px 4px rgba(0, 0, 0, 0.5);
+  }
+  .command-item {
+    @apply text-white font-light cursor-pointer;
+  }
+
     /* Hide scrollbar for Chrome, Safari and Opera */
     .no-scrollbar::-webkit-scrollbar {
         display: none;

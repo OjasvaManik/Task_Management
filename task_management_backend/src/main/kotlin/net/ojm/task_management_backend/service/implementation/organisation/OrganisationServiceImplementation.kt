@@ -1,12 +1,16 @@
 package net.ojm.task_management_backend.service.implementation.organisation
 
+import jakarta.persistence.EntityNotFoundException
 import net.ojm.task_management_backend.domain.dto.group.response.GroupSearchResult
+import net.ojm.task_management_backend.domain.dto.organisation.request.AdminUserRequest
 import net.ojm.task_management_backend.domain.dto.organisation.request.GetAllUsersRequest
 import net.ojm.task_management_backend.domain.dto.organisation.request.OrganisationRegisterRequest
 import net.ojm.task_management_backend.domain.dto.organisation.request.SearchRequest
+import net.ojm.task_management_backend.domain.dto.organisation.response.AdminUserResponse
 import net.ojm.task_management_backend.domain.dto.organisation.response.GetAllUsersResponse
 import net.ojm.task_management_backend.domain.dto.organisation.response.SearchResponse
 import net.ojm.task_management_backend.domain.dto.task.response.TaskSearchResult
+import net.ojm.task_management_backend.domain.entity.user.RoleTypeEnum
 import net.ojm.task_management_backend.repo.group.GroupRepo
 import net.ojm.task_management_backend.repo.organisation.OrganisationRepo
 import net.ojm.task_management_backend.repo.task.TaskRepo
@@ -64,6 +68,31 @@ class OrganisationServiceImplementation(
             }
 
         return SearchResponse(groups, tasks)
+    }
+
+    override fun makeAdmin(request: AdminUserRequest): AdminUserResponse {
+        val organisation = organisationRepo.findById(request.organisationId)
+        if (organisation.isPresent) {
+            val user = userRepo.findByUserName(request.userName)
+            ?: throw EntityNotFoundException("User not found")
+            if (user.organisation.organisationId == organisation.get().organisationId) {
+                user.copy(role = RoleTypeEnum.ADMIN)
+                userRepo.save(user)
+                return AdminUserResponse(
+                    userId = user.userId,
+                    role = user.role,
+                    userName = user.userName,
+                    organisationId = organisation.get().organisationId,
+                    organisationName = organisation.get().organisationName,
+                )
+            } else {
+                throw Exception("User not found in this organisation")
+            }
+        }
+        else {
+            throw Exception("Organisation not found")
+        }
+
     }
 
 }

@@ -384,65 +384,6 @@ export default function RegisterUser() {
                         <UserPlus />
                         {isLoading ? "Registering..." : "Register"}
                     </Button>
-
-                    {/*<FormField*/}
-                    {/*    control={form.control}*/}
-                    {/*    name="name"*/}
-                    {/*    render={({ field }) => (*/}
-                    {/*        <FormItem>*/}
-                    {/*            <FormLabel className={'label'}>Name:</FormLabel>*/}
-                    {/*            <FormControl>*/}
-                    {/*                <Input disabled={form.formState.isSubmitting} placeholder="Name" className={'input'} {...field} />*/}
-                    {/*            </FormControl>*/}
-                    {/*            <FormDescription className={'description'}>*/}
-                    {/*                This is your public display name.*/}
-                    {/*            </FormDescription>*/}
-                    {/*            <FormMessage className={'message'}  />*/}
-                    {/*        </FormItem>*/}
-                    {/*    )}*/}
-                    {/*/>*/}
-                    {/*<FormField*/}
-                    {/*    control={form.control}*/}
-                    {/*    name="email"*/}
-                    {/*    render={({ field }) => (*/}
-                    {/*        <FormItem>*/}
-                    {/*            <FormLabel className={'label'}>Email:</FormLabel>*/}
-                    {/*            <FormControl>*/}
-                    {/*                <Input disabled={form.formState.isSubmitting} placeholder="Email" className={'input'} {...field} />*/}
-                    {/*            </FormControl>*/}
-                    {/*            <FormMessage className={'message'}  />*/}
-                    {/*        </FormItem>*/}
-                    {/*    )}*/}
-                    {/*/>*/}
-                    {/*<FormField*/}
-                    {/*    control={form.control}*/}
-                    {/*    name="organisationName"*/}
-                    {/*    render={({ field }) => (*/}
-                    {/*        <FormItem>*/}
-                    {/*            <FormLabel className={'label'}>Organisation Name:</FormLabel>*/}
-                    {/*            <FormControl>*/}
-                    {/*                <Input disabled={form.formState.isSubmitting} placeholder="Organsiation Name" className={'input'} {...field} />*/}
-                    {/*            </FormControl>*/}
-                    {/*            <FormDescription className={'description'}>*/}
-                    {/*                Enter the Correct name of your Organisation.*/}
-                    {/*            </FormDescription>*/}
-                    {/*            <FormMessage className={'message'}  />*/}
-                    {/*        </FormItem>*/}
-                    {/*    )}*/}
-                    {/*/>*/}
-                    {/*<FormField*/}
-                    {/*    control={form.control}*/}
-                    {/*    name="userPassword"*/}
-                    {/*    render={({ field }) => (*/}
-                    {/*        <FormItem>*/}
-                    {/*            <FormLabel className={'label'}>Password:</FormLabel>*/}
-                    {/*            <FormControl>*/}
-                    {/*                <Input disabled={form.formState.isSubmitting} type="password" placeholder="Password" className={'input'} {...field} />*/}
-                    {/*            </FormControl>*/}
-                    {/*            <FormMessage className={'message'}  />*/}
-                    {/*        </FormItem>*/}
-                    {/*    )}*/}
-                    {/*/>*/}
                 </form>
             </Form>
         </div>

@@ -25,7 +25,7 @@ class AuthController(
         return authService.register(request)
     }
 
-    @GetMapping(path = ["/login"])
+    @PostMapping(path = ["/login"])
     fun login(@RequestBody request: LoginRequest): ResponseEntity<Any> {
         return authService.login(request)
     }
