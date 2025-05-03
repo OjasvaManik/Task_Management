@@ -1,6 +1,5 @@
 import {
     Command,
-    CommandDialog,
     CommandEmpty,
     CommandGroup,
     CommandInput,
@@ -14,7 +13,7 @@ import { useAuth } from "@/context/AuthContext";
 
 
 import {
-    User, UserCheck, UserMinus, UserPlus,
+    User, UserCheck, UserMinus, UserPlus, Users,
 } from "lucide-react"
 import {Link} from "react-router";
 
@@ -24,7 +23,7 @@ export default function CommandBox() {
     return (
         <div >
             <Command className="command-box">
-                <CommandInput placeholder="Type a command or search..." />
+                <CommandInput placeholder="Type a command or search..."  className={'text-white'} />
                 <CommandList>
                     <CommandEmpty>No results found.</CommandEmpty>
                     {user.jwt === null && (
@@ -48,16 +47,65 @@ export default function CommandBox() {
                     {user?.jwt && (
                         <div>
                             <CommandSeparator />
+                            <CommandGroup heading="Tasks">
+                                <CommandItem  className={'command-item'}>
+                                    <User />
+                                    <span>
+                                        Create Group of Tasks
+                                    </span>
+                                    <CommandShortcut>⌘P</CommandShortcut>
+                                </CommandItem>
+                                <CommandItem  className={'command-item'}>
+                                    <Users />
+                                    <span>
+                                        All
+                                    </span>
+                                    <CommandShortcut>⌘B</CommandShortcut>
+                                </CommandItem>
+                                <CommandItem  className={'command-item'}>
+                                    <Users />
+                                    <span>
+                                        Todo
+                                    </span>
+                                    <CommandShortcut>⌘B</CommandShortcut>
+                                </CommandItem>
+                                <CommandItem  className={'command-item'}>
+                                    <Users />
+                                    <span>
+                                        In Progress
+                                    </span>
+                                    <CommandShortcut>⌘B</CommandShortcut>
+                                </CommandItem>
+                                <CommandItem  className={'command-item'}>
+                                    <Users />
+                                    <span>
+                                        Done
+                                    </span>
+                                    <CommandShortcut>⌘B</CommandShortcut>
+                                </CommandItem>
+                                <CommandItem  className={'command-item'}>
+                                    <Users />
+                                    <span>
+                                        Cancelled
+                                    </span>
+                                    <CommandShortcut>⌘B</CommandShortcut>
+                                </CommandItem>
+                            </CommandGroup>
+                            <CommandSeparator />
+                            <CommandSeparator />
                             <CommandGroup heading="Profile">
                                 <CommandItem  className={'command-item'}>
                                     <User />
                                     <span>
-                                {user?.name}
-                            </span>
+                                        {user?.name}
+                                    </span>
                                     <CommandShortcut>⌘P</CommandShortcut>
                                 </CommandItem>
                                 <CommandItem  className={'command-item'}>
-                                    <span>Billing</span>
+                                    <Users />
+                                    <span>
+                                        {user?.organisationName}
+                                    </span>
                                     <CommandShortcut>⌘B</CommandShortcut>
                                 </CommandItem>
                                 <CommandItem  className={'command-item'}>
@@ -65,10 +113,6 @@ export default function CommandBox() {
                                     <CommandShortcut>⌘S</CommandShortcut>
                                 </CommandItem>
                             </CommandGroup>
-                        </div>
-                    )}
-                    {user?.jwt && (
-                        <div>
                             <CommandSeparator />
                             <CommandGroup heading={"Authentication"}>
                                 <div onClick={logout}>

@@ -33,10 +33,10 @@ const schema = z.object({
         message: "Name must be at least 3 characters long",
     }),
     organisationName: z.string().min(1, {
-        message: "Name of Organisation must be at least 3 characters long",
+        message: "Organisation Name must be at least 3 characters long",
     }),
     organisationSecretCode: z.string().min(3, {
-        message: "Organisation Secret Code must be at least 3 characters long",
+        message: "Secret Code must be at least 3 characters long",
     }),
 })
 

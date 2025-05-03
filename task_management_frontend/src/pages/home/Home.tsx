@@ -1,7 +1,6 @@
 import NavBar from "@/pages/home/NavBar.tsx";
-import {Outlet, useNavigate} from "react-router-dom";
+import {Outlet} from "react-router-dom";
 import CommandBox from "@/pages/home/CommandBox.tsx";
-import {useEffect} from "react";
 
 export default function Home() {
 
@@ -11,11 +10,11 @@ export default function Home() {
             <div className="m-2 xl:hidden">
                 <CommandBox />
             </div>
-            <div className="xl:flex xl:flex-1 xl:flex-row">
-                <div className="xl:flex-1 xl:overflow-auto">
+            <div className="xl:flex xl:flex-row">
+                <div className="xl:flex-1 mx-4 boxes">
                     <Outlet />
                 </div>
-                <div className="xl:p-2 xl:sticky hidden xl:block">
+                <div className="xl:p-5 xl:sticky hidden xl:block">
                     <CommandBox />
                 </div>
             </div>

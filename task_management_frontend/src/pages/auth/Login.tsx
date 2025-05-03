@@ -2,11 +2,8 @@ import {
     SubmitHandler,
     useForm,
 } from "react-hook-form";
-
 import { z } from "zod";
-
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { Button } from "@/components/ui/button"
 import {
     Form,
@@ -22,6 +19,7 @@ import {House, UserCheck, UserPlus} from "lucide-react";
 import {useState} from "react";
 import {Link} from "react-router";
 import {useNavigate} from "react-router-dom";
+import { useAuth } from "@/context/AuthContext"; // Adjust the import path as needed
 
 const schema = z.object({
     userName: z.string().min(3, {
@@ -42,6 +40,7 @@ export default function Login() {
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState<string | null>(null);
     const [isSuccess, setIsSuccess] = useState<string | null>(null);
+    const { login } = useAuth(); // Get the login function from AuthContext
 
     const form = useForm<FormFields>({
         resolver: zodResolver(schema),
@@ -53,7 +52,7 @@ export default function Login() {
     });
 
     const onSubmit: SubmitHandler<FormFields> = async (data) => {
-        try{
+        try {
             setIsLoading(true);
             setIsError(null);
             setIsSuccess(null);
@@ -69,7 +68,7 @@ export default function Login() {
                 },
                 body: JSON.stringify(data),
                 credentials: "include",
-            })
+            });
 
             const responseData = await response.json();
 
@@ -77,13 +76,16 @@ export default function Login() {
                 throw new Error(responseData.message || `Error ${response.status}: Login failed`);
             }
 
-            localStorage.setItem("userId", responseData.userId)
-            localStorage.setItem("userName", responseData.userName)
-            localStorage.setItem("name", responseData.name)
-            localStorage.setItem("role", responseData.role)
-            localStorage.setItem("jwtToken", responseData.jwtToken)
-            localStorage.setItem("organisationName", responseData.organisationName)
-            localStorage.setItem("organisationId", responseData.organisationId)
+            // Use the login function from AuthContext instead of directly setting localStorage
+            login({
+                jwt: responseData.jwtToken || null,
+                userName: responseData.userName || null,
+                name: responseData.name || "Guest",
+                role: responseData.role || null,
+                userId: responseData.userId || null,
+                organisationId: responseData.organisationId || null,
+                organisationName: responseData.organisationName || null,
+            });
 
             setIsSuccess("Logged in successfully!");
             navigate("/home");
@@ -97,19 +99,19 @@ export default function Login() {
         } finally {
             setIsLoading(false);
         }
-    }
+    };
 
     return (
         <div className={'flex flex-col justify-end h-screen'}>
-            <div className={'px-10 pt-10 text-5xl text-amber-700 transform capitalize mb-8 font-bold border-b-4 border-amber-700 w-full'}>LOGIN</div>
+            <div className={'nav'}>LOGIN</div>
             <div className={'flex gap-4 mb-5 justify-center items-center xl:hidden'}>
                 <Link to={'/'}><Button className={'button'}><House />Go Home</Button></Link>
                 <Link to={'/register'}><Button className={'button'}><UserPlus />Register</Button></Link>
             </div>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 flex-1 lg:flex lg:justify-center lg:items-center lg:flex-col px-4 py-4 xl:border-amber-700">
-                    <div className={'pb-10 text-2xl text-amber-600 xl:border-t-3 xl:border-x-3 xl:border-amber-700 text-center mb-4 xl:w-[50vw] xl:flex xl:flex-col xl:justify-center xl:items-center xl:gap-4 '}>
-                        <div className={'w-full xl:border-b-3 xl:border-amber-700 mb-5'}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 flex-1 lg:flex lg:justify-center lg:items-center lg:flex-col px-4 py-4">
+                    <div className={'pb-10 text-2xl text-white text-center mb-4 xl:w-[50vw] xl:flex xl:flex-col xl:justify-center xl:items-center xl:gap-4 boxes'}>
+                        <div className={'w-full xl:border-b-3 p-5 mb-5'}>
                             LOGIN USER
                         </div>
                         {isError && (

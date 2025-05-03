@@ -23,11 +23,11 @@ import { useState } from "react";
 
 const schema = z.object({
 	organisationName: z.string().min(1, {
-		message: "Name of Organisation must be at least 3 characters long",
+		message: "Organisation Name must be at least 3 characters long",
 	}),
 	organisationEmail: z.string().email(),
 	organisationSecretCode: z.string().min(3, {
-		message: "Organisation Secret Code must be at least 3 characters long",
+		message: "Secret Code must be at least 3 characters long",
 	}),
 	userName: z.string().min(3, {
 		message: "Username must be at least 3 characters long",
