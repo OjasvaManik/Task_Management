@@ -7,6 +7,8 @@ import Register from "@/pages/auth/Register.tsx";
 import Home from "@/pages/home/Home.tsx";
 import Login from "@/pages/auth/Login.tsx";
 import {AuthProvider} from "@/context/AuthContext.tsx";
+import UserProfile from "@/pages/profile/UserProfile.tsx";
+import OrganisationProfile from "@/pages/profile/OrganisationProfile.tsx";
 
 const router = createBrowserRouter([
     {
@@ -19,7 +21,21 @@ const router = createBrowserRouter([
             },
             {
                 path: '/home',
-                element: <Home />
+                element: <Home />,
+                children: [
+                    {
+                        index: true,
+                        element: <UserProfile />
+                    },
+                    {
+                        path: 'user',
+                        element: <UserProfile />
+                    },
+                    {
+                        path: 'organisation',
+                        element: <OrganisationProfile />
+                    },
+                ]
             },
             {
                 path: '/register',

@@ -24,7 +24,7 @@ export default function CommandBox() {
         <div >
             <Command className="command-box">
                 <CommandInput placeholder="Type a command or search..."  className={'text-white'} />
-                <CommandList>
+                <CommandList className={'max-h-auto'}>
                     <CommandEmpty>No results found.</CommandEmpty>
                     {user.jwt === null && (
                         <CommandGroup heading="Authentication">
@@ -94,20 +94,24 @@ export default function CommandBox() {
                             <CommandSeparator />
                             <CommandSeparator />
                             <CommandGroup heading="Profile">
-                                <CommandItem  className={'command-item'}>
-                                    <User />
-                                    <span>
+                                <Link to={'/home/user'}>
+                                    <CommandItem  className={'command-item'}>
+                                        <User />
+                                        <span>
                                         {user?.name}
                                     </span>
-                                    <CommandShortcut>⌘P</CommandShortcut>
-                                </CommandItem>
-                                <CommandItem  className={'command-item'}>
-                                    <Users />
-                                    <span>
-                                        {user?.organisationName}
-                                    </span>
-                                    <CommandShortcut>⌘B</CommandShortcut>
-                                </CommandItem>
+                                        <CommandShortcut>⌘P</CommandShortcut>
+                                    </CommandItem>
+                                </Link>
+                                <Link to={'/home/organisation'}>
+                                    <CommandItem  className={'command-item'}>
+                                        <Users />
+                                        <span>
+                                            {user?.organisationName}
+                                        </span>
+                                        <CommandShortcut>⌘B</CommandShortcut>
+                                    </CommandItem>
+                                </Link>
                                 <CommandItem  className={'command-item'}>
                                     <span>Settings</span>
                                     <CommandShortcut>⌘S</CommandShortcut>

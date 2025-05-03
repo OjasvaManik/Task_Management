@@ -14,7 +14,7 @@ export default function Home() {
                 <div className="xl:flex-1 mx-4 boxes">
                     <Outlet />
                 </div>
-                <div className="xl:p-5 xl:sticky hidden xl:block">
+                <div className="xl:p-5 xl:sticky xl:top-0 hidden xl:block h-fit">
                     <CommandBox />
                 </div>
             </div>
