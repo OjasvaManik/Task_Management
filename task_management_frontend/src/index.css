@@ -117,8 +117,8 @@
   body {
     @apply bg-background text-foreground font-[JetBrains_Mono];
     ::selection {
-      color: #10172A;
-      background: #FFC107;
+      color: black;
+      background: rgba(128, 0, 255, 1);
     }
   }
 }
@@ -155,6 +155,14 @@
   .button {
     @apply border-0 bg-black rounded-2xl h-10;
 
+  }
+  .profile-tab {
+    @apply text-white data-[state=active]:text-black;
+    box-shadow: 10px 10px 4px rgba(128, 0, 255, 0.15);
+  }
+  .profile-card {
+    @apply bg-black text-white border-0;
+    box-shadow: 10px 10px 4px rgba(128, 0, 255, 0.15);
   }
   .command-box {
     @apply border-0 rounded-lg shadow-md md:min-w-[450px] bg-black mr-5;

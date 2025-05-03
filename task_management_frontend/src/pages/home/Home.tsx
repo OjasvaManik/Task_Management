@@ -3,15 +3,14 @@ import {Outlet} from "react-router-dom";
 import CommandBox from "@/pages/home/CommandBox.tsx";
 
 export default function Home() {
-
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col xl:h-screen xl:overflow-hidden">
             <NavBar />
             <div className="m-2 xl:hidden">
                 <CommandBox />
             </div>
-            <div className="xl:flex xl:flex-row">
-                <div className="xl:flex-1 mx-4 boxes">
+            <div className="xl:flex xl:flex-row xl:overflow-auto">
+                <div className="xl:flex-1 mx-4 boxes xl:overflow-y-auto xl:overflow-hidden">
                     <Outlet />
                 </div>
                 <div className="xl:p-5 xl:sticky xl:top-0 hidden xl:block h-fit">
@@ -21,3 +20,4 @@ export default function Home() {
         </div>
     );
 }
+

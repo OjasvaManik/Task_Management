@@ -15,6 +15,7 @@ type AuthContextType = {
     setUser: (user: AuthData) => void;
     logout: () => void;
     login: (user: AuthData) => void;
+    updateUser: (user: AuthData) => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -41,6 +42,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         localStorage.setItem("organisationId", user.organisationId || "");
     };
 
+    const updateUser = (user: AuthData) => {
+        setUser((prevUser) => ({
+            ...prevUser,
+            ...user,
+        }));
+        localStorage.setItem("userName", user.userName || "");
+        localStorage.setItem("name", user.name || "Guest");
+        localStorage.setItem("role", user.role || "");
+        localStorage.setItem("organisationName", user.organisationName || "");
+        localStorage.setItem("organisationId", user.organisationId || "");
+        localStorage.setItem("userId", user.userId || "");
+        localStorage.setItem("jwtToken", user.jwt || "");
+    }
+
     const logout = () => {
         localStorage.clear();
         console.log("Logging out...");
@@ -56,7 +71,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, setUser, logout, login }}>
+        <AuthContext.Provider value={{ user, setUser, logout, login, updateUser }}>
             {children}
         </AuthContext.Provider>
     );

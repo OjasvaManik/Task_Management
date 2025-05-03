@@ -57,7 +57,6 @@ export default function Login() {
             setIsError(null);
             setIsSuccess(null);
 
-            console.log("Submitting form data:", data);
 
             const apiUrl = "http://localhost:8080/api/v1/auth/login";
 
