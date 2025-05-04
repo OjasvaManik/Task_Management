@@ -14,6 +14,9 @@ interface GroupRepo: JpaRepository<GroupEntity, UUID> {
 
     fun findAllByOrganisation(organisation: OrganisationEntity): List<GroupEntity>?
 
+    @Query("SELECT g.organisation FROM GroupEntity g WHERE g.groupId = :groupId")
+    fun findOrganisationByGroupId(groupId: UUID): OrganisationEntity?
+
     @Query(
         """
             SELECT g.group_id, g.group_title, g.group_description, ts_rank(g.search_vector, plainto_tsquery('english', :query)) as rank

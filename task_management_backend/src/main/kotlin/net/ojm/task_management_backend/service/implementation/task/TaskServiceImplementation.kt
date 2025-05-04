@@ -24,27 +24,40 @@ class TaskServiceImplementation(
     private val organisationRepo: OrganisationRepo
 ): TaskService {
 
-    override fun createTask(request: CreateTaskRequest): CreateTaskResponse {
-        val user = userRepo.findByUserName(request.createdBy)
+    override fun createTasks(requestList: List<CreateTaskRequest>): List<CreateTaskResponse> {
+        if (requestList.isEmpty()) {
+            throw IllegalArgumentException("Request list cannot be empty")
+        }
+
+        val groupId = requestList.first().groupId
+
+        // Ensure all requests belong to the same group
+        if (!requestList.all { it.groupId == groupId }) {
+            throw IllegalArgumentException("All tasks must belong to the same group")
+        }
+
+        val user = userRepo.findByUserName(requestList.first().createdBy)
             ?: throw IllegalArgumentException("User not found")
 
-        val group = groupRepo.findByGroupId(request.groupId)
+        val group = groupRepo.findByGroupId(groupId)
             ?: throw IllegalArgumentException("Group not found")
 
         val organisation = organisationRepo.findByOrganisationId(group.organisation.organisationId)
             ?: throw IllegalArgumentException("Organisation not found")
 
-        var task = request.toTaskEntity(group, user)
-        task = taskRepo.save(task)
-        return task.toCreateTaskResponse(organisation)
+        val tasks = requestList.map { it.toTaskEntity(group, user) }
+        val savedTasks = taskRepo.saveAll(tasks)
+
+        return savedTasks.map { it.toCreateTaskResponse(organisation) }
     }
 
-    override fun getAllTasksByGroup(request: GetTasksRequest): List<GetTasksResponse> {
-        val organisation = organisationRepo.findByOrganisationId(request.organisationId)
-            ?: throw IllegalArgumentException("Organisation not found")
 
-        val group = groupRepo.findByGroupId(request.groupId)
+    override fun getAllTasksByGroup(groupId: UUID): List<GetTasksResponse> {
+        val group = groupRepo.findByGroupId(groupId)
             ?: throw IllegalArgumentException("Group not found")
+
+        val organisation = group.organisation
+
 
         val tasks = taskRepo.findAllByGroup(group)
             ?: throw IllegalArgumentException("Tasks not found")
@@ -53,15 +66,11 @@ class TaskServiceImplementation(
     }
 
     override fun setTaskStatus(taskId: UUID, status: ProgressTypeEnum): Boolean {
-        return try {
-            var task = taskRepo.findByTaskId(taskId)
-                ?: throw IllegalArgumentException("Task not found")
-            task = task.copy(status = status)
-            taskRepo.save(task)
-            true
-        } catch (ex: Exception) {
-            false
-        }
+        val task = taskRepo.findByTaskId(taskId) ?: return false
+        val updated = task.copy(status = status)
+        taskRepo.save(updated)
+        return true
     }
+
 
 }

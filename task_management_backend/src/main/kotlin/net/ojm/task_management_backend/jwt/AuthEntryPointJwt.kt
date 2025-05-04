@@ -22,7 +22,21 @@ class AuthEntryPointJwt : AuthenticationEntryPoint {
         response: HttpServletResponse,
         authException: AuthenticationException
     ) {
-        logger.error("Unauthorized error: ${authException.message}")
+        val requestPath = request.servletPath
+        val method = request.method
+        val remoteAddr = request.remoteAddr
+        val userAgent = request.getHeader("User-Agent") ?: "Unknown"
+
+        logger.error(
+            """
+            Unauthorized access attempt:
+            - Method: $method
+            - Path: $requestPath
+            - Remote IP: $remoteAddr
+            - User-Agent: $userAgent
+            - Error: ${authException.message}
+            """.trimIndent()
+        )
 
         response.contentType = MediaType.APPLICATION_JSON_VALUE
         response.status = HttpServletResponse.SC_UNAUTHORIZED
@@ -31,7 +45,7 @@ class AuthEntryPointJwt : AuthenticationEntryPoint {
             "status" to HttpServletResponse.SC_UNAUTHORIZED,
             "error" to "Unauthorized",
             "message" to (authException.message ?: "Unauthorized access"),
-            "path" to request.servletPath
+            "path" to requestPath
         )
 
         val mapper = ObjectMapper()

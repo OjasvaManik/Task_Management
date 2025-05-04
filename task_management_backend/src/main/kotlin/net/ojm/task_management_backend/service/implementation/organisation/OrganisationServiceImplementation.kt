@@ -28,10 +28,20 @@ class OrganisationServiceImplementation(
     private val taskRepo: TaskRepo,
 ): OrganisationService {
 
-    override fun getAllUsersByOrganisation(request: GetAllUsersRequest): List<GetAllUsersResponse> {
-        val organisation = organisationRepo.findById(request.organisationId)
+    override fun getAllUsersByOrganisation(organisationId: UUID): List<GetAllUsersResponse> {
+        println("🔍 Fetching users for organisation ID: $organisationId")
+
+        val organisation = organisationRepo.findById(organisationId)
         if (organisation.isPresent) {
+            println("✅ Organisation found: ${organisation.get().organisationName}")
+
             val users = userRepo.findAllByOrganisation(organisation.get())
+            println("👥 Number of users found: ${users.size}")
+
+            users.forEach { user ->
+                println("➡️ User: ${user.name}, Username: ${user.userName}, Role: ${user.role}")
+            }
+
             return users.map { user ->
                 GetAllUsersResponse(
                     userId = user.userId,
@@ -42,9 +52,11 @@ class OrganisationServiceImplementation(
                 )
             }
         } else {
+            println("❌ Organisation not found for ID: $organisationId")
             throw Exception("Organisation not found")
         }
     }
+
 
     override fun search(request: SearchRequest): SearchResponse {
         val groups = groupRepo.search(request.search, request.organisationId)
@@ -76,8 +88,13 @@ class OrganisationServiceImplementation(
             val user = userRepo.findByUserName(request.userName)
             ?: throw EntityNotFoundException("User not found")
             if (user.organisation.organisationId == organisation.get().organisationId) {
-                user.copy(role = RoleTypeEnum.ADMIN)
-                userRepo.save(user)
+                if (user.role == RoleTypeEnum.ADMIN) {
+                    throw Exception("User is already an admin")
+                }
+                else {
+                    val updatedUser = user.copy(role = RoleTypeEnum.ADMIN)
+                    userRepo.save(updatedUser)
+                }
                 return AdminUserResponse(
                     userId = user.userId,
                     role = user.role,
@@ -92,7 +109,6 @@ class OrganisationServiceImplementation(
         else {
             throw Exception("Organisation not found")
         }
-
     }
 
 }

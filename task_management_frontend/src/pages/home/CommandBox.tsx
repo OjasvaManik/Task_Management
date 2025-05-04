@@ -6,16 +6,17 @@ import {
     CommandItem,
     CommandList,
     CommandSeparator,
-    CommandShortcut,
 } from "@/components/ui/command"
 
 import { useAuth } from "@/context/AuthContext";
 
-
 import {
+    BookCheck, BookMinus, BookOpenCheck, Check, CheckCheck, StickyNote,
     User, UserCheck, UserMinus, UserPlus, Users,
 } from "lucide-react"
 import {Link} from "react-router";
+import CreateGroup from "@/pages/Group/CreateGroup.tsx";
+import CreateTask from "@/pages/Group/CreateTask.tsx";
 
 export default function CommandBox() {
     const { user, logout } = useAuth();
@@ -46,69 +47,62 @@ export default function CommandBox() {
                         <>
                             <CommandSeparator />
                             <CommandGroup heading="Tasks">
-                                <CommandItem  className={'command-item'}>
-                                    <User />
-                                    <span>
-                                        Create Group of Tasks
-                                    </span>
-                                    <CommandShortcut>⌘P</CommandShortcut>
+                                <CommandItem value={'group'} className={'command-item'}>
+                                    <BookCheck />
+                                    <CreateGroup />
                                 </CommandItem>
-                                <CommandItem  className={'command-item'}>
-                                    <Users />
-                                    <span>
-                                        All
-                                    </span>
-                                    <CommandShortcut>⌘B</CommandShortcut>
+                                <CommandItem value={'task'} className={'command-item'}>
+                                    <BookCheck />
+                                    <CreateTask />
                                 </CommandItem>
+                                    <Link to={"/home"}>
+                                        <CommandItem  className={'command-item'}>
+                                            <BookOpenCheck />
+                                            <span>All</span>
+                                        </CommandItem>
+                                    </Link>
                                 <CommandItem  className={'command-item'}>
-                                    <Users />
+                                    <StickyNote />
                                     <span>
                                         Todo
                                     </span>
-                                    <CommandShortcut>⌘B</CommandShortcut>
                                 </CommandItem>
                                 <CommandItem  className={'command-item'}>
-                                    <Users />
+                                    <Check />
                                     <span>
                                         In Progress
                                     </span>
-                                    <CommandShortcut>⌘B</CommandShortcut>
                                 </CommandItem>
                                 <CommandItem  className={'command-item'}>
-                                    <Users />
+                                    <CheckCheck />
                                     <span>
                                         Done
                                     </span>
-                                    <CommandShortcut>⌘B</CommandShortcut>
                                 </CommandItem>
                                 <CommandItem  className={'command-item'}>
-                                    <Users />
+                                    <BookMinus />
                                     <span>
                                         Cancelled
                                     </span>
-                                    <CommandShortcut>⌘B</CommandShortcut>
                                 </CommandItem>
                             </CommandGroup>
 
                             <CommandSeparator />
                             <CommandGroup heading="Profile">
                                 <Link to={'/home/user'}>
-                                    <CommandItem className={'command-item'}>
+                                    <CommandItem value={'user'} className={'command-item'}>
                                         <User />
                                         <span>{user?.name}</span>
-                                        <CommandShortcut>⌘P</CommandShortcut>
                                     </CommandItem>
                                 </Link>
                                 <Link to={'/home/organisation'}>
-                                    <CommandItem className={'command-item'}>
+                                    <CommandItem value={'organisation'} className={'command-item'}>
                                         <Users />
                                         <span>{user?.organisationName}</span>
-                                        <CommandShortcut>⌘B</CommandShortcut>
                                     </CommandItem>
                                 </Link>
                                 <CommandItem className={'command-item'}>
                                     <span>Settings</span>
-                                    <CommandShortcut>⌘S</CommandShortcut>
                                 </CommandItem>
                             </CommandGroup>
 
@@ -124,93 +118,6 @@ export default function CommandBox() {
                         </>
                     )}
                 </CommandList>
-
-
-
-                {/*{user?.jwt && (*/}
-                {/*        <div>*/}
-                {/*            <CommandSeparator />*/}
-                {/*            <CommandGroup heading="Tasks">*/}
-                {/*                <CommandItem  className={'command-item'}>*/}
-                {/*                    <User />*/}
-                {/*                    <span>*/}
-                {/*                        Create Group of Tasks*/}
-                {/*                    </span>*/}
-                {/*                    <CommandShortcut>⌘P</CommandShortcut>*/}
-                {/*                </CommandItem>*/}
-                {/*                <CommandItem  className={'command-item'}>*/}
-                {/*                    <Users />*/}
-                {/*                    <span>*/}
-                {/*                        All*/}
-                {/*                    </span>*/}
-                {/*                    <CommandShortcut>⌘B</CommandShortcut>*/}
-                {/*                </CommandItem>*/}
-                {/*                <CommandItem  className={'command-item'}>*/}
-                {/*                    <Users />*/}
-                {/*                    <span>*/}
-                {/*                        Todo*/}
-                {/*                    </span>*/}
-                {/*                    <CommandShortcut>⌘B</CommandShortcut>*/}
-                {/*                </CommandItem>*/}
-                {/*                <CommandItem  className={'command-item'}>*/}
-                {/*                    <Users />*/}
-                {/*                    <span>*/}
-                {/*                        In Progress*/}
-                {/*                    </span>*/}
-                {/*                    <CommandShortcut>⌘B</CommandShortcut>*/}
-                {/*                </CommandItem>*/}
-                {/*                <CommandItem  className={'command-item'}>*/}
-                {/*                    <Users />*/}
-                {/*                    <span>*/}
-                {/*                        Done*/}
-                {/*                    </span>*/}
-                {/*                    <CommandShortcut>⌘B</CommandShortcut>*/}
-                {/*                </CommandItem>*/}
-                {/*                <CommandItem  className={'command-item'}>*/}
-                {/*                    <Users />*/}
-                {/*                    <span>*/}
-                {/*                        Cancelled*/}
-                {/*                    </span>*/}
-                {/*                    <CommandShortcut>⌘B</CommandShortcut>*/}
-                {/*                </CommandItem>*/}
-                {/*            </CommandGroup>*/}
-                {/*            <CommandSeparator />*/}
-                {/*            <CommandSeparator />*/}
-                {/*            <CommandGroup heading="Profile">*/}
-                {/*                <Link to={'/home/user'}>*/}
-                {/*                    <CommandItem  className={'command-item'}>*/}
-                {/*                        <User />*/}
-                {/*                        <span>*/}
-                {/*                        {user?.name}*/}
-                {/*                    </span>*/}
-                {/*                        <CommandShortcut>⌘P</CommandShortcut>*/}
-                {/*                    </CommandItem>*/}
-                {/*                </Link>*/}
-                {/*                <Link to={'/home/organisation'}>*/}
-                {/*                    <CommandItem  className={'command-item'}>*/}
-                {/*                        <Users />*/}
-                {/*                        <span>*/}
-                {/*                            {user?.organisationName}*/}
-                {/*                        </span>*/}
-                {/*                        <CommandShortcut>⌘B</CommandShortcut>*/}
-                {/*                    </CommandItem>*/}
-                {/*                </Link>*/}
-                {/*                <CommandItem  className={'command-item'}>*/}
-                {/*                    <span>Settings</span>*/}
-                {/*                    <CommandShortcut>⌘S</CommandShortcut>*/}
-                {/*                </CommandItem>*/}
-                {/*            </CommandGroup>*/}
-                {/*            <CommandSeparator />*/}
-                {/*            <CommandGroup heading={"Authentication"}>*/}
-                {/*                <div onClick={logout}>*/}
-                {/*                    <CommandItem className={'command-item'}>*/}
-                {/*                        <UserMinus />*/}
-                {/*                        <span>Logout</span>*/}
-                {/*                    </CommandItem>*/}
-                {/*                </div>*/}
-                {/*            </CommandGroup>*/}
-                {/*        </div>*/}
-                {/*    )}*/}
             </Command>
         </div>
     )

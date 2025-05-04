@@ -10,6 +10,6 @@ interface GroupService {
 
     fun createGroup(request: GroupCreateRequest): GroupCreateResponse
 
-    fun getAllGroups(request: GetGroupsRequest): List<GetGroupsResponse>
+    fun getAllGroups(organisationId: UUID): List<GetGroupsResponse>
 
 }

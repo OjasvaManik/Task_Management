@@ -37,8 +37,8 @@ class GroupServiceImplementation(
         return savedGroup.toGroupCreateResponse(organisation)
     }
 
-    override fun getAllGroups(request: GetGroupsRequest): List<GetGroupsResponse> {
-        val organisation = organisationRepo.findByOrganisationId(request.organisationId)
+    override fun getAllGroups(organisationId: UUID): List<GetGroupsResponse> {
+        val organisation = organisationRepo.findByOrganisationId(organisationId)
             ?: throw IllegalArgumentException("Organisation not found")
 
         val groups = groupRepo.findAllByOrganisation(organisation)

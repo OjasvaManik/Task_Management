@@ -6,10 +6,11 @@ import net.ojm.task_management_backend.domain.dto.organisation.request.SearchReq
 import net.ojm.task_management_backend.domain.dto.organisation.response.AdminUserResponse
 import net.ojm.task_management_backend.domain.dto.organisation.response.GetAllUsersResponse
 import net.ojm.task_management_backend.domain.dto.organisation.response.SearchResponse
+import java.util.UUID
 
 interface OrganisationService {
 
-    fun getAllUsersByOrganisation(request: GetAllUsersRequest): List<GetAllUsersResponse>
+    fun getAllUsersByOrganisation(organisationId: UUID): List<GetAllUsersResponse>
 
     fun search(request: SearchRequest): SearchResponse
 

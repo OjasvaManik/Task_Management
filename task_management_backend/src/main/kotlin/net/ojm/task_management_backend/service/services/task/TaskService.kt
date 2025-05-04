@@ -9,9 +9,9 @@ import java.util.UUID
 
 interface TaskService {
 
-    fun createTask(request: CreateTaskRequest): CreateTaskResponse
+    fun createTasks(request: List<CreateTaskRequest>): List<CreateTaskResponse>
 
-    fun getAllTasksByGroup(request: GetTasksRequest): List<GetTasksResponse>
+    fun getAllTasksByGroup(groupId: UUID): List<GetTasksResponse>
 
     fun setTaskStatus(taskId: UUID, status: ProgressTypeEnum): Boolean
 

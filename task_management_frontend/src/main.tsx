@@ -9,6 +9,8 @@ import Login from "@/pages/auth/Login.tsx";
 import {AuthProvider} from "@/context/AuthContext.tsx";
 import UserProfile from "@/pages/profile/UserProfile.tsx";
 import OrganisationProfile from "@/pages/profile/OrganisationProfile.tsx";
+import CreateGroup from "@/pages/Group/CreateGroup.tsx";
+import {AllGroups} from "@/pages/Group/AllGroups.tsx";
 
 const router = createBrowserRouter([
     {
@@ -25,7 +27,7 @@ const router = createBrowserRouter([
                 children: [
                     {
                         index: true,
-                        element: <UserProfile />
+                        element: <AllGroups />
                     },
                     {
                         path: 'user',
@@ -35,6 +37,14 @@ const router = createBrowserRouter([
                         path: 'organisation',
                         element: <OrganisationProfile />
                     },
+                    {
+                        path: 'create',
+                        element: <CreateGroup />
+                    },
+                    {
+                        path: "",
+                        element: <AllGroups />
+                    }
                 ]
             },
             {
