@@ -12,6 +12,7 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion"
 import { useTaskService, TaskResponse } from "@/pages/Group/GetTasks.tsx"
+import { TaskStatusDropdown } from "./TaskStatusDropdown"
 
 // Define types based on your API responses
 type AssignTaskResponse = {
@@ -118,32 +119,22 @@ export function AllGroups() {
         }
     }
 
-    const getStatusClass = (status: string) => {
-        switch(status?.toLowerCase()) {
-            case 'completed':
-                return 'bg-green-700 text-white'
-            case 'in_progress':
-                return 'bg-blue-700 text-white'
-            case 'not_started':
-                return 'bg-gray-700 text-white'
-            case 'overdue':
-                return 'bg-red-700 text-white'
-            case 'cancelled':
-                return 'bg-red-500 text-white'
-            default:
-                return 'bg-gray-700 text-white'
-        }
-    }
+    const handleTaskStatusChange = async (groupId: string, taskId: string, newStatus: string) => {
+        // Update the local state with the new status
+        const updatedGroups = groups.map(group => {
+            if (group.groupId === groupId && group.tasks) {
+                const updatedTasks = group.tasks.map(task => {
+                    if (task.taskId === taskId) {
+                        return { ...task, status: newStatus }
+                    }
+                    return task
+                })
+                return { ...group, tasks: updatedTasks }
+            }
+            return group
+        })
 
-    const formatStatus = (status: string) => {
-        if (!status) return 'Unknown'
-
-        // Convert from SNAKE_CASE to Title Case
-        return status
-            .toLowerCase()
-            .split('_')
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(' ')
+        setGroups(updatedGroups)
     }
 
     if (loading) {
@@ -240,9 +231,11 @@ export function AllGroups() {
                                                     <h5 className="text-white font-medium">{task.taskTitle}</h5>
                                                     <p className="text-gray-300 text-sm">{task.taskDescription}</p>
                                                 </div>
-                                                <span className={`text-xs px-2 py-1 rounded ${getStatusClass(task.status)}`}>
-                                                    {formatStatus(task.status)}
-                                                </span>
+                                                <TaskStatusDropdown
+                                                    taskId={task.taskId}
+                                                    initialStatus={task.status}
+                                                    onStatusChange={(newStatus) => handleTaskStatusChange(group.groupId, task.taskId, newStatus)}
+                                                />
                                             </div>
                                             <div className="mt-2 flex justify-between text-xs text-gray-400">
                                                 <span>Due: {formatDate(task.dueDate)}</span>

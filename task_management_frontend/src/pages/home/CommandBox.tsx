@@ -61,30 +61,30 @@ export default function CommandBox() {
                                             <span>All</span>
                                         </CommandItem>
                                     </Link>
-                                <CommandItem  className={'command-item'}>
-                                    <StickyNote />
-                                    <span>
-                                        Todo
-                                    </span>
-                                </CommandItem>
-                                <CommandItem  className={'command-item'}>
-                                    <Check />
-                                    <span>
-                                        In Progress
-                                    </span>
-                                </CommandItem>
-                                <CommandItem  className={'command-item'}>
-                                    <CheckCheck />
-                                    <span>
-                                        Done
-                                    </span>
-                                </CommandItem>
-                                <CommandItem  className={'command-item'}>
-                                    <BookMinus />
-                                    <span>
-                                        Cancelled
-                                    </span>
-                                </CommandItem>
+                                {/*<CommandItem  className={'command-item'}>*/}
+                                {/*    <StickyNote />*/}
+                                {/*    <span>*/}
+                                {/*        Todo*/}
+                                {/*    </span>*/}
+                                {/*</CommandItem>*/}
+                                {/*<CommandItem  className={'command-item'}>*/}
+                                {/*    <Check />*/}
+                                {/*    <span>*/}
+                                {/*        In Progress*/}
+                                {/*    </span>*/}
+                                {/*</CommandItem>*/}
+                                {/*<CommandItem  className={'command-item'}>*/}
+                                {/*    <CheckCheck />*/}
+                                {/*    <span>*/}
+                                {/*        Done*/}
+                                {/*    </span>*/}
+                                {/*</CommandItem>*/}
+                                {/*<CommandItem  className={'command-item'}>*/}
+                                {/*    <BookMinus />*/}
+                                {/*    <span>*/}
+                                {/*        Cancelled*/}
+                                {/*    </span>*/}
+                                {/*</CommandItem>*/}
                             </CommandGroup>
 
                             <CommandSeparator />

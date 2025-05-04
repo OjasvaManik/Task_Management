@@ -1,6 +1,5 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import { useAuth } from "@/context/AuthContext"
 import axios from "axios"
 
@@ -16,6 +15,8 @@ export type TaskResponse = {
     organisationId: string
 }
 
+export type ProgressTypeEnum = 'TODO' | 'IN_PROGRESS' | 'DONE' | 'CANCELLED'
+
 export const useTaskService = () => {
     const { user } = useAuth()
 
@@ -25,11 +26,6 @@ export const useTaskService = () => {
         }
 
         try {
-            const request = {
-                groupId: groupId,
-                organisationId: user.organisationId
-            }
-
             const response = await axios.get<TaskResponse[]>(
                 `http://localhost:8080/api/v1/task/group/${groupId}`,
                 {
@@ -52,6 +48,36 @@ export const useTaskService = () => {
         }
     }
 
+    const setTaskStatus = async (taskId: string, status: string) => {
+        if (!user?.jwt) {
+            throw new Error("Authentication required. Please log in again.")
+        }
+
+        try {
+            // Convert UI status back to backend ProgressTypeEnum
+            const progressType = mapStatusToProgressType(status)
+
+            const response = await axios.post(
+                `http://localhost:8080/api/v1/task/set-status`,
+                {
+                    taskId: taskId,
+                    status: progressType
+                },
+                {
+                    headers: {
+                        "Authorization": `Bearer ${user.jwt}`,
+                        "Content-Type": "application/json"
+                    }
+                }
+            )
+
+            return response.data
+        } catch (error) {
+            console.error(`Error updating task status for ${taskId}:`, error)
+            throw error
+        }
+    }
+
     // Maps the backend ProgressTypeEnum values to the frontend status values
     const mapProgressTypeToStatus = (progressType: string) => {
         switch (progressType) {
@@ -68,7 +94,26 @@ export const useTaskService = () => {
         }
     }
 
+    // Maps the frontend status values back to backend ProgressTypeEnum
+    const mapStatusToProgressType = (status: string) => {
+        switch (status) {
+            case 'NOT_STARTED':
+                return 'TODO'
+            case 'IN_PROGRESS':
+                return 'IN_PROGRESS'
+            case 'COMPLETED':
+                return 'DONE'
+            case 'CANCELLED':
+                return 'CANCELLED'
+            default:
+                return 'TODO'
+        }
+    }
+
     return {
-        fetchTasksByGroup
+        fetchTasksByGroup,
+        setTaskStatus,
+        mapProgressTypeToStatus,
+        mapStatusToProgressType
     }
 }
