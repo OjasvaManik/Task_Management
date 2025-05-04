@@ -26,21 +26,49 @@ class AuthTokenFilter(
         filterChain: FilterChain
     ) {
         logger.debug("AuthTokenFilter called for URI: ${request.requestURI}")
+
+        // Log request headers for debugging
+        logger.debug("Request headers:")
+        val headerNames = request.headerNames
+        while (headerNames.hasMoreElements()) {
+            val headerName = headerNames.nextElement()
+            logger.debug("$headerName: ${request.getHeader(headerName)}")
+        }
+
         try {
             val jwt = parseJwt(request)
-            if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
-                val username = jwtUtils.getUserNameFromJwtToken(jwt)
-                val userDetails = userDetailsService.loadUserByUsername(username)
+            logger.debug("JWT token extracted: ${jwt != null}")
 
-                val authentication = UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails.authorities
-                )
-                logger.debug("Roles from JWT: ${userDetails.authorities}")
-                authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
-                SecurityContextHolder.getContext().authentication = authentication
+            if (jwt != null) {
+                val isValid = jwtUtils.validateJwtToken(jwt)
+                logger.debug("JWT validation result: $isValid")
+
+                if (isValid) {
+                    val username = jwtUtils.getUserNameFromJwtToken(jwt)
+                    logger.debug("Username from JWT: $username")
+
+                    try {
+                        val userDetails = userDetailsService.loadUserByUsername(username)
+                        logger.debug("User details loaded successfully: ${userDetails.username}")
+                        logger.debug("User authorities: ${userDetails.authorities}")
+
+                        val authentication = UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.authorities
+                        )
+                        authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
+                        SecurityContextHolder.getContext().authentication = authentication
+                        logger.debug("Authentication set in SecurityContext")
+                    } catch (e: Exception) {
+                        logger.error("Error loading user details for username: $username", e)
+                    }
+                } else {
+                    logger.warn("Invalid JWT token")
+                }
+            } else {
+                logger.debug("No JWT token found in request")
             }
         } catch (e: Exception) {
-            logger.error("Cannot set user authentication", e)
+            logger.error("Authentication process failed", e)
         }
 
         filterChain.doFilter(request, response)
@@ -48,7 +76,7 @@ class AuthTokenFilter(
 
     private fun parseJwt(request: HttpServletRequest): String? {
         val jwt = jwtUtils.getJwtFromHeader(request)
-        logger.debug("AuthTokenFilter.kt: $jwt")
+        logger.debug("JWT from header: ${jwt?.take(10)}${if (jwt != null && jwt.length > 10) "..." else ""}")
         return jwt
     }
 }

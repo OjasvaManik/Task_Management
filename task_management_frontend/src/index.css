@@ -129,22 +129,22 @@
   }
   .nav {
     @apply m-4 px-10 p-5 text-5xl text-white bg-black flex justify-center items-center rounded-2xl;
-    box-shadow: 10px 10px 4px rgba(128, 0, 255, 0.15);
+    box-shadow: 10px 10px 4px rgba(255, 255, 255, 0.15);
   }
   .reg-nav {
     @apply mx-4 mb-4 p-5 text-5xl text-white bg-black flex justify-center items-center rounded-2xl;
-    box-shadow: 10px 10px 4px rgba(128, 0, 255, 0.15);
+    box-shadow: 10px 10px 4px rgba(255, 255, 255, 0.15);
   }
   .boxes {
     @apply bg-black rounded-2xl p-5;
-    box-shadow: 10px 10px 4px rgba(128, 0, 255, 0.15);
+    box-shadow: 10px 10px 4px rgba(255, 255, 255, 0.15);
   }
   .label {
     @apply text-sm font-semibold leading-none !text-white;
   }
   .input {
     @apply min-w-xs min-lg:min-w-sm min-xl:w-2xl h-12 rounded-xl text-white text-xs placeholder:text-gray-300 placeholder:text-xs focus:border-0 border-0 bg-black;
-      /*box-shadow: 10px 10px 4px rgba(128, 0, 255, 0.15);*/
+      /*box-shadow: 10px 10px 4px rgba(255, 255, 255, 0.15);*/
   }
   .description {
     @apply text-sm text-amber-600 text-wrap ;
@@ -158,15 +158,15 @@
   }
   .profile-tab {
     @apply text-white data-[state=active]:text-black;
-    box-shadow: 10px 10px 4px rgba(128, 0, 255, 0.15);
+    box-shadow: 10px 10px 4px rgba(255, 255, 255, 0.15);
   }
   .profile-card {
     @apply bg-black text-white border-0;
-    box-shadow: 10px 10px 4px rgba(128, 0, 255, 0.15);
+    box-shadow: 10px 10px 4px rgba(255, 255, 255, 0.15);
   }
   .command-box {
     @apply border-0 rounded-lg shadow-md md:min-w-[450px] bg-black mr-5;
-    box-shadow: 10px 10px 4px rgba(128, 0, 255, 0.15);
+    box-shadow: 10px 10px 4px rgba(255, 255, 255, 0.15);
   }
   .command-item {
     @apply text-white font-light cursor-pointer;

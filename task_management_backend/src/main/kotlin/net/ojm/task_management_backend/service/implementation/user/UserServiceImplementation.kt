@@ -20,7 +20,6 @@ class UserServiceImplementation(
 
         // Create a new user object with updated fields
         val updatedUser = user.copy(
-            userName = request.userName ?: user.userName,
             name = request.name ?: user.name
         )
 

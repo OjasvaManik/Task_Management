@@ -5,7 +5,6 @@ import java.util.UUID
 data class UserUpdateRequest(
 
     val userId: UUID,
-    val userName: String?,
     val name: String?,
 
 )

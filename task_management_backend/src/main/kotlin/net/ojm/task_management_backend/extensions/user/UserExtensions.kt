@@ -10,6 +10,6 @@ fun UserEntity.toUserUpdateResponse(): UserUpdateResponse {
         name = this.name,
         organisationName = this.organisation.organisationName,
         organisationId = this.organisation.organisationId,
-        role = this.role,
+        role = this.role.toString(),
     )
 }

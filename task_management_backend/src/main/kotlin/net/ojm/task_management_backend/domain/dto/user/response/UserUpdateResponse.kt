@@ -10,6 +10,6 @@ data class UserUpdateResponse(
     val userName: String,
     val organisationName: String,
     val organisationId: UUID,
-    val role: RoleTypeEnum,
+    val role: String,
 
 )

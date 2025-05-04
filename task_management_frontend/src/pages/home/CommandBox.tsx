@@ -26,10 +26,11 @@ export default function CommandBox() {
                 <CommandInput placeholder="Type a command or search..."  className={'text-white'} />
                 <CommandList className={'max-h-auto'}>
                     <CommandEmpty>No results found.</CommandEmpty>
-                    {user.jwt === null && (
+
+                    {!user?.jwt ? (
                         <CommandGroup heading="Authentication">
                             <Link to={'/register'}>
-                                <CommandItem  className={'command-item'}>
+                                <CommandItem className={'command-item'}>
                                     <UserPlus />
                                     <span>Register</span>
                                 </CommandItem>
@@ -41,11 +42,8 @@ export default function CommandBox() {
                                 </CommandItem>
                             </Link>
                         </CommandGroup>
-                    )}
-
-
-                    {user?.jwt && (
-                        <div>
+                    ) : (
+                        <>
                             <CommandSeparator />
                             <CommandGroup heading="Tasks">
                                 <CommandItem  className={'command-item'}>
@@ -91,34 +89,31 @@ export default function CommandBox() {
                                     <CommandShortcut>⌘B</CommandShortcut>
                                 </CommandItem>
                             </CommandGroup>
-                            <CommandSeparator />
+
                             <CommandSeparator />
                             <CommandGroup heading="Profile">
                                 <Link to={'/home/user'}>
-                                    <CommandItem  className={'command-item'}>
+                                    <CommandItem className={'command-item'}>
                                         <User />
-                                        <span>
-                                        {user?.name}
-                                    </span>
+                                        <span>{user?.name}</span>
                                         <CommandShortcut>⌘P</CommandShortcut>
                                     </CommandItem>
                                 </Link>
                                 <Link to={'/home/organisation'}>
-                                    <CommandItem  className={'command-item'}>
+                                    <CommandItem className={'command-item'}>
                                         <Users />
-                                        <span>
-                                            {user?.organisationName}
-                                        </span>
+                                        <span>{user?.organisationName}</span>
                                         <CommandShortcut>⌘B</CommandShortcut>
                                     </CommandItem>
                                 </Link>
-                                <CommandItem  className={'command-item'}>
+                                <CommandItem className={'command-item'}>
                                     <span>Settings</span>
                                     <CommandShortcut>⌘S</CommandShortcut>
                                 </CommandItem>
                             </CommandGroup>
+
                             <CommandSeparator />
-                            <CommandGroup heading={"Authentication"}>
+                            <CommandGroup heading="Authentication">
                                 <div onClick={logout}>
                                     <CommandItem className={'command-item'}>
                                         <UserMinus />
@@ -126,9 +121,96 @@ export default function CommandBox() {
                                     </CommandItem>
                                 </div>
                             </CommandGroup>
-                        </div>
+                        </>
                     )}
                 </CommandList>
+
+
+
+                {/*{user?.jwt && (*/}
+                {/*        <div>*/}
+                {/*            <CommandSeparator />*/}
+                {/*            <CommandGroup heading="Tasks">*/}
+                {/*                <CommandItem  className={'command-item'}>*/}
+                {/*                    <User />*/}
+                {/*                    <span>*/}
+                {/*                        Create Group of Tasks*/}
+                {/*                    </span>*/}
+                {/*                    <CommandShortcut>⌘P</CommandShortcut>*/}
+                {/*                </CommandItem>*/}
+                {/*                <CommandItem  className={'command-item'}>*/}
+                {/*                    <Users />*/}
+                {/*                    <span>*/}
+                {/*                        All*/}
+                {/*                    </span>*/}
+                {/*                    <CommandShortcut>⌘B</CommandShortcut>*/}
+                {/*                </CommandItem>*/}
+                {/*                <CommandItem  className={'command-item'}>*/}
+                {/*                    <Users />*/}
+                {/*                    <span>*/}
+                {/*                        Todo*/}
+                {/*                    </span>*/}
+                {/*                    <CommandShortcut>⌘B</CommandShortcut>*/}
+                {/*                </CommandItem>*/}
+                {/*                <CommandItem  className={'command-item'}>*/}
+                {/*                    <Users />*/}
+                {/*                    <span>*/}
+                {/*                        In Progress*/}
+                {/*                    </span>*/}
+                {/*                    <CommandShortcut>⌘B</CommandShortcut>*/}
+                {/*                </CommandItem>*/}
+                {/*                <CommandItem  className={'command-item'}>*/}
+                {/*                    <Users />*/}
+                {/*                    <span>*/}
+                {/*                        Done*/}
+                {/*                    </span>*/}
+                {/*                    <CommandShortcut>⌘B</CommandShortcut>*/}
+                {/*                </CommandItem>*/}
+                {/*                <CommandItem  className={'command-item'}>*/}
+                {/*                    <Users />*/}
+                {/*                    <span>*/}
+                {/*                        Cancelled*/}
+                {/*                    </span>*/}
+                {/*                    <CommandShortcut>⌘B</CommandShortcut>*/}
+                {/*                </CommandItem>*/}
+                {/*            </CommandGroup>*/}
+                {/*            <CommandSeparator />*/}
+                {/*            <CommandSeparator />*/}
+                {/*            <CommandGroup heading="Profile">*/}
+                {/*                <Link to={'/home/user'}>*/}
+                {/*                    <CommandItem  className={'command-item'}>*/}
+                {/*                        <User />*/}
+                {/*                        <span>*/}
+                {/*                        {user?.name}*/}
+                {/*                    </span>*/}
+                {/*                        <CommandShortcut>⌘P</CommandShortcut>*/}
+                {/*                    </CommandItem>*/}
+                {/*                </Link>*/}
+                {/*                <Link to={'/home/organisation'}>*/}
+                {/*                    <CommandItem  className={'command-item'}>*/}
+                {/*                        <Users />*/}
+                {/*                        <span>*/}
+                {/*                            {user?.organisationName}*/}
+                {/*                        </span>*/}
+                {/*                        <CommandShortcut>⌘B</CommandShortcut>*/}
+                {/*                    </CommandItem>*/}
+                {/*                </Link>*/}
+                {/*                <CommandItem  className={'command-item'}>*/}
+                {/*                    <span>Settings</span>*/}
+                {/*                    <CommandShortcut>⌘S</CommandShortcut>*/}
+                {/*                </CommandItem>*/}
+                {/*            </CommandGroup>*/}
+                {/*            <CommandSeparator />*/}
+                {/*            <CommandGroup heading={"Authentication"}>*/}
+                {/*                <div onClick={logout}>*/}
+                {/*                    <CommandItem className={'command-item'}>*/}
+                {/*                        <UserMinus />*/}
+                {/*                        <span>Logout</span>*/}
+                {/*                    </CommandItem>*/}
+                {/*                </div>*/}
+                {/*            </CommandGroup>*/}
+                {/*        </div>*/}
+                {/*    )}*/}
             </Command>
         </div>
     )

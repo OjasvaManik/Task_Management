@@ -7,5 +7,5 @@ data class UserUpdatePasswordRequest(
     val userId: UUID,
     val currentPassword: String,
     val newPassword: String
-    
+
 )

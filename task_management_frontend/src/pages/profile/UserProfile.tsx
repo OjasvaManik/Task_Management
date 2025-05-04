@@ -62,8 +62,6 @@ export default function UserProfile() {
         }
     }, [user, navigate]);
 
-    if (!user?.jwt) return null;
-
     const updateForm = useForm<UpdateForm>({
         resolver: zodResolver(schemaUpdate),
         defaultValues: {
@@ -89,12 +87,18 @@ export default function UserProfile() {
 
             const apiUrl = "http://localhost:8080/api/v1/user/update";
 
+            const payLoad = {
+                userId: user.userId,
+                ...data
+            }
+
             const response = await fetch(apiUrl, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
+                    'Authorization': `Bearer ${user.jwt}`
                 },
-                body: JSON.stringify(data),
+                body: JSON.stringify(payLoad),
                 credentials: "include",
             });
 
@@ -107,9 +111,9 @@ export default function UserProfile() {
             updateUser({
                 name: responseData.name,
                 userName: responseData.userName,
-                role: responseData.userRole,
-                organisationName: responseData.organisationName,
-                organisationId: responseData.organisationId,
+                role: user.role,
+                organisationName: user.organisationName,
+                organisationId: user.organisationId,
                 userId: responseData.userId,
                 jwt: user.jwt,
             })
@@ -173,20 +177,10 @@ export default function UserProfile() {
                                             </FormItem>
                                         )}
                                     />
-                                    <FormField
-                                        control={updateForm.control}
-                                        name="userName"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Username</FormLabel>
-                                                <FormControl>
-                                                    <Input {...field} className="border-0" />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-
+                                    <div className="space-y-1">
+                                        <Label htmlFor="role">Username</Label>
+                                        <Input id="userName" value={user.userName} disabled className="border-0" />
+                                    </div>
                                     <div className="space-y-1">
                                         <Label htmlFor="role">Role</Label>
                                         <Input id="role" value={user.role} disabled className="border-0" />
